@@ -15,10 +15,10 @@ def calculate_future_value(initial_capital, monthly_investment, annual_rate, yea
     # Total future value
     future_value = future_value_initial_capital + future_value_monthly_investments
     
-    return future_value
+    return future_value, future_value_initial_capital, future_value_monthly_investments
 
 # Streamlit app
-st.title('📈 Monthly Investment Calculator with Initial Capital 📈')
+st.title('📈Monthly Investment Calculator with Initial Capital📈')
 
 # Brief description
 st.write("""
@@ -34,5 +34,9 @@ years = st.number_input('Investment Duration (years)', min_value=0, value=3)
 
 # Calculate future value
 if st.button('Calculate'):
-    future_value = calculate_future_value(initial_capital, monthly_investment, annual_rate, years)
-    st.write(f'After {years} years, with an initial capital of {initial_capital} € and investing {monthly_investment} € each month at an annual interest rate of {annual_rate * 100} %, the final amount will be approximately {future_value:.2f} €.')
+    future_value, future_value_initial_capital, future_value_monthly_investments = calculate_future_value(initial_capital, monthly_investment, annual_rate, years)
+    total_invested = initial_capital + monthly_investment * 12 * years
+    total_interest_earned = future_value - total_invested
+    st.write(f'After {years} years, with an initial capital of {initial_capital:.2f} € and investing {monthly_investment:.2f} € each month at an annual interest rate of {annual_rate * 100:.2f} %, the final amount will be approximately {future_value:.2f} €.')
+    st.write(f'Total interest earned will be approximately {total_interest_earned:.2f} €.')
+
