@@ -1,4 +1,4 @@
-# Compound-Interest
+# 📈 Compound-Interest 📈
 This project is a Streamlit-based web application that helps users calculate the future value of their investments. The calculator takes into account both an initial capital and regular monthly contributions, leveraging the concept of compound interest.  
 
 **Features**
@@ -14,3 +14,5 @@ This project is a Streamlit-based web application that helps users calculate the
 **What is Compound Interest?**
 
 Compound interest is the interest on a loan or deposit calculated based on both the initial principal and the accumulated interest from previous periods. It allows your investments to grow faster over time because you earn interest on the interest already added to the principal.
+
+Link to the streamlit app : [link](https://compound-interest-ui.streamlit.app/)
