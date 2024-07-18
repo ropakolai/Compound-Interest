@@ -40,3 +40,29 @@ if st.button('Calculate'):
     st.write(f'After {years} years, with an initial capital of {initial_capital:.2f} € and investing {monthly_investment:.2f} € each month at an annual interest rate of {annual_rate * 100:.2f} %, the final amount will be approximately {future_value:.2f} €.')
     st.write(f'Total interest earned will be approximately {total_interest_earned:.2f} €.')
 
+# Custom CSS for positioning text
+custom_css = """
+<style>
+.bottom-right {
+    position: fixed;
+    bottom: 10px;
+    right: 80px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+</style>
+"""
+
+# Custom HTML for the text
+custom_html = """
+<div class="bottom-right">
+    © 2024 Nikolai ROPA
+</div>
+"""
+
+# Injecting CSS and HTML into the Streamlit app
+st.markdown(custom_css, unsafe_allow_html=True)
+st.markdown(custom_html, unsafe_allow_html=True)
+
