@@ -1,21 +1,26 @@
 import streamlit as st
+import plotly.graph_objects as go
 
-def calculate_future_value(initial_capital, monthly_investment, annual_rate, years):
-    # Convert annual rate to a monthly rate
+def calculate_future_value_over_time(initial_capital, monthly_investment, annual_rate, years):
     monthly_rate = annual_rate / 12
-    # Total number of periods (months)
     periods = years * 12
+
+    future_values = []
+    interests_earned = []
     
-    # Future value of the initial capital
-    future_value_initial_capital = initial_capital * ((1 + monthly_rate) ** periods)
+    for period in range(1, periods + 1):
+        future_value_initial_capital = initial_capital * ((1 + monthly_rate) ** period)
+        future_value_monthly_investments = monthly_investment * (((1 + monthly_rate) ** period - 1) / monthly_rate)
+        future_value = future_value_initial_capital + future_value_monthly_investments
+        
+        total_invested = initial_capital + monthly_investment * period
+        interest_earned = future_value - total_invested
+        
+        if period % 12 == 0:  # Capture the value at the end of each year
+            future_values.append(future_value)
+            interests_earned.append(interest_earned)
     
-    # Future value formula for regular monthly investments
-    future_value_monthly_investments = monthly_investment * (((1 + monthly_rate) ** periods - 1) / monthly_rate)
-    
-    # Total future value
-    future_value = future_value_initial_capital + future_value_monthly_investments
-    
-    return future_value, future_value_initial_capital, future_value_monthly_investments
+    return future_values, interests_earned
 
 # Streamlit app
 st.title('📈Monthly Investment Calculator with Initial Capital📈')
@@ -34,13 +39,50 @@ years = st.number_input('Investment Duration (years)', min_value=0, value=3)
 
 # Calculate future value
 if st.button('Calculate'):
-    future_value, future_value_initial_capital, future_value_monthly_investments = calculate_future_value(initial_capital, monthly_investment, annual_rate, years)
+    future_values, interests_earned = calculate_future_value_over_time(initial_capital, monthly_investment, annual_rate, years)
     total_invested = initial_capital + monthly_investment * 12 * years
+    future_value = future_values[-1]
     total_interest_earned = future_value - total_invested
-    st.write(f'After {years} years, with an initial capital of {initial_capital:.2f} € and investing {monthly_investment:.2f} € each month at an annual interest rate of {annual_rate * 100:.2f} %, the final amount will be approximately: **{future_value:.2f} €**.')
-    st.write(f'Total interest earned will be approximately: **{total_interest_earned:.2f} €**.')
+    
+    st.write(f'After {years} years, with an initial capital of {initial_capital:.2f} € and investing {monthly_investment:.2f} € each month at an annual interest rate of {annual_rate * 100:.2f} %, the final amount will be approximately **{future_value:.2f} €**.')
+    st.write(f'Total interest earned will be approximately **{total_interest_earned:.2f} €**.')
+    
+    # Plotting the future values and interests earned with Plotly
+    years_range = list(range(1, years + 1))
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=years_range,
+        y=future_values,
+        mode='lines',
+        name='Future Value',
+        fill='tonexty',
+        fillcolor='rgba(0, 100, 255, 0.2)',
+        line=dict(color='blue')
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=years_range,
+        y=interests_earned,
+        mode='lines',
+        name='Total Interest Earned',
+        fill='tozeroy',
+        fillcolor='rgba(0, 255, 0, 0.2)',
+        line=dict(color='green')
+    ))
+    
+    fig.update_layout(
+        title='Future Value and Total Interest Earned Over Time',
+        xaxis_title='Years',
+        yaxis_title='Amount (€)',
+        legend_title='Legend',
+        template='plotly_white'
+    )
+    
+    st.plotly_chart(fig)
 
-# Custom CSS for positioning text
+    # Custom CSS for positioning text
 custom_css = """
 <style>
 .bottom-right {
@@ -65,4 +107,3 @@ custom_html = """
 # Injecting CSS and HTML into the Streamlit app
 st.markdown(custom_css, unsafe_allow_html=True)
 st.markdown(custom_html, unsafe_allow_html=True)
-
